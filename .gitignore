@@ -1,1 +1,7 @@
 /venv/
+.idea/.gitignore
+.idea/ItAI2.iml
+.idea/inspectionProfiles/
+.idea/misc.xml
+.idea/modules.xml
+.idea/vcs.xml
