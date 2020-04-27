@@ -1,4 +1,6 @@
 Pillow
 numpy
-scipy
 pycairo
+numba
+matplotlib
+imageio
