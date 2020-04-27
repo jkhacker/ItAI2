@@ -14,16 +14,13 @@ from time import time
 
 def overall_arrangement(creatures: list):
     o_fit = 0
-    for cr in creatures:
-        print(cr.fitness)
     delta_fit = [
-        (-(100 * (creatures[i].fitness / max_fit) - 100.0), i) for i in range(len(creatures)) if
-        creatures[i].fitness < max_fit
+        (-(100 * (creatures[c].fitness / max_fit) - 100.0), c) for c in range(len(creatures)) if
+        creatures[c].fitness < max_fit
     ]
     for i in range(len(delta_fit)):
         delta_fit[i] = (delta_fit[i][0] - delta_fit[-1][0], delta_fit[i][1])
     for i in range(len(delta_fit)):
-        print('here')
         o_fit += delta_fit[i][0]
         overall_part = 0
         res_len = i
@@ -68,6 +65,8 @@ def progressbar(it, size=60, file=sys.stdout):
 
 @jit(nopython=True)
 def calculate_fitness(A, B):
+    # return (np.square(A - B)).mean()
+    # return np.sum(np.sum((A - B)**2, axis=2)**0.5)
     return np.sum(np.sqrt(np.sum(np.square(np.subtract(A, B)), axis=2)))
 
 
@@ -155,10 +154,9 @@ im_src = Image.open(filename, 'r').convert('RGBA')
 colors = []
 for r, g, b, a in list(im_src.getdata()):
     colors.append((r/255, g/255, b/255, opacity))
-src_data = np.array(im_src)
+src_data = np.array(im_src).astype(np.uint16)
 
 max_fit = calculate_fitness(np.zeros((512, 512, 4), dtype=np.uint8), src_data)
-print(max_fit)
 pop_len = 20
 
 past_gen = [Creature() for i in range(pop_len)]
@@ -169,6 +167,7 @@ i = 0
 overall_timing = []
 children_generation_timing = []
 children_in_gen = []
+now = time()
 
 for i in progressbar(range(i, gen_len)):
     start_gen = time()
@@ -210,7 +209,9 @@ for i in progressbar(range(i, gen_len)):
     # for being in past_gen:
     #     if being.is_child():
     #         children_in_gen[-1] += 1
-    overall_timing.append(time()-start_gen)
+    # overall_timing.append(time()-start_gen)
+
+print('\nOverall time: ', time()-now)
 
 # plt.plot(list(range(len(graph))), graph)
 # plt.xlabel('Generation')
